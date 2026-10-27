@@ -1,18 +1,31 @@
 name: CI
+
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  placeholder:
+  structure-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Verify repo structure
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist
         run: |
-          echo "Phase 0 CI: structure check"
-          test -f docs/PROJECT_PROMPT.md
-          test -d scripts
-          echo "Structure OK"
+          echo "Checking repository structure..."
+          test -f docs/PROJECT_PROMPT.md || (echo "Missing PROJECT_PROMPT.md" && exit 1)
+          test -f docs/LEARNING_LOG.md || (echo "Missing LEARNING_LOG.md" && exit 1)
+          test -f .env.example || (echo "Missing .env.example" && exit 1)
+          test -f .gitignore || (echo "Missing .gitignore" && exit 1)
+          echo "All structural files are present."
+
+      - name: Prevent committing .env
+        run: |
+          if [ -f .env ]; then
+            echo "ERROR: .env file found in repository. Secrets must not be committed!"
+            exit 1
+          fi
+          echo ".env is not tracked. Good."
