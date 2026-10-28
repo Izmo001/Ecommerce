@@ -7,7 +7,11 @@ on:
     branches: [ main ]
 
 jobs:
+<<<<<<< HEAD
   python-lint-and-test:
+=======
+  structure-check:
+>>>>>>> origin/main
     runs-on: ubuntu-latest
 
     services:
@@ -26,6 +30,7 @@ jobs:
           --health-retries 5
 
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@v4
       
       - name: Set up Python 3.12
@@ -51,3 +56,24 @@ jobs:
         run: |
           python -m py_compile scripts/seed_products.py
           python -m py_compile scripts/search.py
+=======
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist
+        run: |
+          echo "Checking repository structure..."
+          test -f docs/PROJECT_PROMPT.md || (echo "Missing PROJECT_PROMPT.md" && exit 1)
+          test -f docs/LEARNING_LOG.md || (echo "Missing LEARNING_LOG.md" && exit 1)
+          test -f .env.example || (echo "Missing .env.example" && exit 1)
+          test -f .gitignore || (echo "Missing .gitignore" && exit 1)
+          echo "All structural files are present."
+
+      - name: Prevent committing .env
+        run: |
+          if [ -f .env ]; then
+            echo "ERROR: .env file found in repository. Secrets must not be committed!"
+            exit 1
+          fi
+          echo ".env is not tracked. Good."
+>>>>>>> origin/main

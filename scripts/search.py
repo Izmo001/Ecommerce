@@ -39,4 +39,9 @@ def search(query: str, limit: int = 3):
 
 if __name__ == "__main__":
     query = sys.argv[1] if len(sys.argv) > 1 else "shoes for hitting the trails"
+<<<<<<< HEAD
     search(query)
+=======
+    search(query)
+    
+>>>>>>> origin/main
